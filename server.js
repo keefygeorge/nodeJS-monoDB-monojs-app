@@ -1,4 +1,5 @@
 console.log("loading server socket");
+
 // Use npm install connect
 var connect = require('connect');
 connect.createServer(
@@ -8,14 +9,15 @@ connect.createServer(
 
 
 var data, ws;
-// Use npm install ws
+// Use npm install ws for better browser support
 var WebSocketServer = require('ws').Server,
-	db = require('db');
+	mongo = require('mongoDB.js');
 	
 ws = new WebSocketServer({port: 8081});
 console.log("Server started on localhost port 8081");
 ws.on('connection', function(ws) {
-	connectDB();
+	var db = mongo.mongoDB();
+	console.log("mongoDB Database connected on localhost");
 	console.log("Client connected to server");
 	
 	ws.on('message', function(message) {
@@ -23,10 +25,10 @@ ws.on('connection', function(ws) {
 		var msg = JSON.parse(message);
 		
 		var n = db.users.find({name: msg.name},{name:1,_id:0}, function(err,users){
-			ws.send(JSON.stringify(n));
 			if( err || !users) console.log("No account found please register");
 			else users.forEach( function(user) {
 				console.log(user);
+				ws.send(JSON.stringify(user));				
 			});
 		});	
 	});
