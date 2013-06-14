@@ -1,6 +1,6 @@
 Dependencies:
 nmp install nodejs
-nmp install mongojs
+nmp install mongodb
 nmp install mongojs
 
 To run the server from the .vbs file edit the pathname to point
